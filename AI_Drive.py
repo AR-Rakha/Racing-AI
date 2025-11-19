@@ -2,9 +2,11 @@ import pygame
 
 pygame.init()
 
-class Produkt:
-  def __init__(self):
-    pass
+class bil:
+  def __init__(self,X_pos,Y_pos, angle):
+    self.X_pos=X_pos
+    self.Y_pos=Y_pos
+    self.angle=angle
 
   def __str__(self):
     pass
