@@ -39,6 +39,8 @@ angle_vel=0
 angle_acc_strength=10
 angle_de_acc_strength=10
 
+border_bounce_multiplier=1
+
 
 w, h = pygame.display.get_surface().get_size()
 
@@ -71,17 +73,17 @@ while run:
 
   if x_pos<0:
     x_pos=0
-    x_vel=x_vel*-0.5
+    x_vel=x_vel*-border_bounce_multiplier
   if x_pos>w:
     x_pos=w
-    x_vel=x_vel*-0.5
+    x_vel=x_vel*-border_bounce_multiplier
 
   if y_pos<0:
     y_pos=0
-    y_vel=y_vel*-0.5
+    y_vel=y_vel*-border_bounce_multiplier
   elif y_pos>h:
     y_pos=h
-    y_vel=y_vel*-0.5
+    y_vel=y_vel*-border_bounce_multiplier
 
   if key[pygame.K_ESCAPE]:
     run = False
