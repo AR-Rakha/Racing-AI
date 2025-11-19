@@ -1,4 +1,5 @@
 import pygame
+import math
 
 pygame.init()
 
@@ -22,24 +23,65 @@ screen = pygame.display.set_mode((0,0),pygame.FULLSCREEN)
 
 run=True
 
-car = pygame.Rect(300,300,50,50)
+#car = pygame.Rect(300,300,50,50)
+car = pygame.image.load("Formula_1_car.png")
+
+
+x_pos=0
+y_pos=0
+x_vel=0
+y_vel=0
+
+acc_multiplier=0.005
+
+angle =0
+angle_vel=0
+angle_acc_strength=10
+angle_de_acc_strength=10
+
+
+w, h = pygame.display.get_surface().get_size()
+
 
 while run:
   
   screen.fill((0,0,0,0.1))
 
-  pygame.draw.rect(screen,(255,0,0,0),car)
+  
+  car_rotated=pygame.transform.rotate(car,angle)
+  car_rect=car_rotated.get_rect(center=(x_pos,y_pos))
+  screen.blit(car_rotated,car_rect)
+  #pygame.draw.rect(screen,(255,0,0,0),car)
 
   key= pygame.key.get_pressed()
   if key[pygame.K_a]:
-    car.move_ip(-1,0)
+    angle= angle+1
   elif key[pygame.K_d]:
-    car.move_ip(1,0)
+    angle= angle-1
   
   if key[pygame.K_s]:
-    car.move_ip(0,1)
+    x_vel=x_vel+math.sin(angle*math.pi/180)*acc_multiplier
+    y_vel=y_vel+math.cos(angle*math.pi/180)*acc_multiplier
   elif key[pygame.K_w]:
-    car.move_ip(0,-1)
+    x_vel=x_vel-math.sin(angle*math.pi/180)*acc_multiplier
+    y_vel=y_vel-math.cos(angle*math.pi/180)*acc_multiplier
+
+  x_pos=x_pos+x_vel
+  y_pos=y_pos+y_vel
+
+  if x_pos<0:
+    x_pos=0
+    x_vel=x_vel*-0.5
+  if x_pos>w:
+    x_pos=w
+    x_vel=x_vel*-0.5
+
+  if y_pos<0:
+    y_pos=0
+    y_vel=y_vel*-0.5
+  elif y_pos>h:
+    y_pos=h
+    y_vel=y_vel*-0.5
 
   if key[pygame.K_ESCAPE]:
     run = False
