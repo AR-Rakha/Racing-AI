@@ -41,8 +41,14 @@ angle_de_acc_strength=10
 
 border_bounce_multiplier=1
 
+air_resistance_multiplier=0.002
+
+air_resistance=1-air_resistance_multiplier
+
 
 w, h = pygame.display.get_surface().get_size()
+
+#def getForwardVector():
 
 
 while run:
@@ -84,6 +90,10 @@ while run:
   elif y_pos>h:
     y_pos=h
     y_vel=y_vel*-border_bounce_multiplier
+
+  x_vel=x_vel*air_resistance
+  y_vel=y_vel*air_resistance
+
 
   if key[pygame.K_ESCAPE]:
     run = False
