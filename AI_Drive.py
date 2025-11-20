@@ -44,7 +44,7 @@ y_pos=0
 x_vel=0
 y_vel=0
 
-acc_multiplier=0.005
+acc_multiplier=0.004
 
 angle =0
 angle_vel=0
@@ -55,6 +55,7 @@ border_bounce_multiplier=1
 
 air_resistance=1-(0.002)
 
+steering_amount=0.5
 
 
 def getForwardVector(angle):
@@ -87,13 +88,20 @@ while run:
   car_rect=car_rotated.get_rect(center=(pos[0],pos[1]))
   screen.blit(car_rotated,car_rect)
 
+  speed=np.linalg.norm(vel)
   
-
   key= pygame.key.get_pressed()
-  if key[pygame.K_a]:
-    angle= angle+1
-  elif key[pygame.K_d]:
-    angle= angle-1
+  if speed >0:
+    if key[pygame.K_a]:
+      angle= angle+(steering_amount/(speed*1.3))*speed
+    elif key[pygame.K_d]:
+      angle= angle-(steering_amount/(speed*1.3))*speed
+  else:
+    if key[pygame.K_a]:
+      angle= angle+steering_amount
+    elif key[pygame.K_d]:
+      angle= angle-steering_amount
+  
   
   if key[pygame.K_s]:
     vel[0]=vel[0]+math.sin(angle*math.pi/180)*acc_multiplier
@@ -119,7 +127,7 @@ while run:
     vel[1]=vel[1]*-border_bounce_multiplier
 
   #vel=np.multiply(vel,air_resistance)
-  vel=vel+grip(vel,angle,0.001,0.02)
+  vel=vel+grip(vel,angle,0.001,0.01)
 
   if key[pygame.K_ESCAPE]:
     run = False
