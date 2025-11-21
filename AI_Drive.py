@@ -33,7 +33,7 @@ run=True
 car = pygame.image.load("Formula_1_car.png")
 car=pygame.transform.scale_by(car,0.5)
 track=pygame.image.load("Track.webp")
-track_scaled=pygame.transform.scale_by(track,1.4)
+track_scaled=pygame.transform.scale_by(track,0.9)
 track_rect=track_scaled.get_rect(center=(w/2,h/2))
 
 pos=np.array([0,0])
