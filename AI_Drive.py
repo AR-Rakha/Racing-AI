@@ -51,17 +51,18 @@ angle_vel=0
 angle_acc_strength=10
 angle_de_acc_strength=10
 
-border_bounce_multiplier=1
+border_bounce_multiplier=0.1
 
 air_resistance=1-(0.002)
 
 steering_amount=0.5
 
+deg_to_rad=math.pi/180
 
 def getForwardVector(angle):
-  return np.array([math.sin(angle*math.pi/180),math.cos(angle*math.pi/180)])
+  return np.array([math.sin(angle*deg_to_rad),math.cos(angle*deg_to_rad)])
 def getRightVector(angle):
-  return np.array([math.cos(angle*math.pi/180),-math.sin(angle*math.pi/180)])
+  return np.array([math.cos(angle*deg_to_rad),-math.sin(angle*deg_to_rad)])
 
 def grip(vel,angle,forward_friction_multiplier,sideways_friction_multiplier):
   forward = getForwardVector(angle)
@@ -89,26 +90,27 @@ while run:
   screen.blit(car_rotated,car_rect)
 
   speed=np.linalg.norm(vel)
+  clamped_max_speed=max(0, min(speed, 1))
+  clamped_min_speed=max(1, min(speed, 100))
   
   key= pygame.key.get_pressed()
+  # Makes it turn like a real car (no speed/movement = no turning)
+  # plus in high speeds it is harder to turn (forces the driver to slow down for a turn)
   if speed >0:
     if key[pygame.K_a]:
-      angle= angle+(steering_amount/(speed*1.3))*speed
+      angle= angle+((steering_amount/(clamped_min_speed*0.9))*clamped_max_speed)
     elif key[pygame.K_d]:
-      angle= angle-(steering_amount/(speed*1.3))*speed
-  else:
-    if key[pygame.K_a]:
-      angle= angle+steering_amount
-    elif key[pygame.K_d]:
-      angle= angle-steering_amount
+      angle= angle-((steering_amount/(clamped_min_speed*0.9))*clamped_max_speed)
+  
+      
   
   
   if key[pygame.K_s]:
-    vel[0]=vel[0]+math.sin(angle*math.pi/180)*acc_multiplier
-    vel[1]=vel[1]+math.cos(angle*math.pi/180)*acc_multiplier
+    vel[0]=vel[0]+math.sin(angle*deg_to_rad)*acc_multiplier
+    vel[1]=vel[1]+math.cos(angle*deg_to_rad)*acc_multiplier
   elif key[pygame.K_w]:
-    vel[0]=vel[0]-math.sin(angle*math.pi/180)*acc_multiplier
-    vel[1]=vel[1]-math.cos(angle*math.pi/180)*acc_multiplier
+    vel[0]=vel[0]-math.sin(angle*deg_to_rad)*acc_multiplier
+    vel[1]=vel[1]-math.cos(angle*deg_to_rad)*acc_multiplier
 
   pos=np.add(pos,vel)
 
