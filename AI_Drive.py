@@ -96,11 +96,16 @@ while run:
   key= pygame.key.get_pressed()
   # Makes it turn like a real car (no speed/movement = no turning)
   # plus in high speeds it is harder to turn (forces the driver to slow down for a turn)
+
+  # final steering multiplier
+  steer_scale = ((steering_amount/(clamped_min_speed*0.7))*clamped_max_speed)
+
+
   if speed >0:
     if key[pygame.K_a]:
-      angle= angle+((steering_amount/(clamped_min_speed*0.9))*clamped_max_speed)
+      angle= angle+steer_scale
     elif key[pygame.K_d]:
-      angle= angle-((steering_amount/(clamped_min_speed*0.9))*clamped_max_speed)
+      angle= angle-steer_scale
   
       
   
@@ -129,7 +134,7 @@ while run:
     vel[1]=vel[1]*-border_bounce_multiplier
 
   #vel=np.multiply(vel,air_resistance)
-  vel=vel+grip(vel,angle,0.001,0.01)
+  vel=vel+grip(vel,angle,0.001,0.03)
 
   if key[pygame.K_ESCAPE]:
     run = False
